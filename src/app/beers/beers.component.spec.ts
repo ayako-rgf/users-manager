@@ -1,28 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { MatCardModule } from '@angular/material';
+import { MatTableModule } from '@angular/material';
 
-import { DashboardComponent } from './dashboard.component';
+import { BeersComponent } from './beers.component';
 
-describe('DashboardComponent', () => {
-    let component: DashboardComponent;
-    let fixture: ComponentFixture<DashboardComponent>;
+describe('BeersComponent', () => {
+    let component: BeersComponent;
+    let fixture: ComponentFixture<BeersComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DashboardComponent],
+            declarations: [BeersComponent],
             imports: [
                 HttpClientModule,
                 RouterTestingModule,
-                MatCardModule
+                MatTableModule
             ]
         })
             .compileComponents();
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DashboardComponent);
+        fixture = TestBed.createComponent(BeersComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -1,7 +1,12 @@
-<h1>{{title}}</h1>
-<nav>
-    <a routerLink="/dashboard">Dashboard</a>
-    <a routerLink="/heroes">Heroes</a>
+<nav mat-tab-nav-bar>
+    <a mat-tab-link
+        *ngFor="let navLink of navLinks; let i = index"
+        [routerLink]="navLink.link"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{navLink.label}}
+    </a>
 </nav>
-<router-outlet></router-outlet>
-<app-messages></app-messages>
+<div class="body-container">
+    <router-outlet></router-outlet>
+</div>

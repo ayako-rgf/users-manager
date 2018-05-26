@@ -1,6 +1,17 @@
-# AngularTourOfHeroes
+# Angular Tour Of Beers
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.3.
+
+## Screenshots
+
+### Dashboard
+![dashboard](https://user-images.githubusercontent.com/17846084/41083935-39b82b92-6a65-11e8-885f-4126463dbbec.png)
+
+### List of All Beers
+![list](https://user-images.githubusercontent.com/17846084/41083937-3ba1a7bc-6a65-11e8-84b1-2c73dade74f9.png)
+
+### Add New
+![new](https://user-images.githubusercontent.com/17846084/41083938-3c419178-6a65-11e8-93e0-ad6e641226a0.png)
 
 ## Development server
 

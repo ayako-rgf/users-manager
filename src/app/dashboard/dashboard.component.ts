@@ -1,23 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
+import { Beer } from '../beer';
+import { BeerService } from '../beer.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: [ './dashboard.component.css' ]
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  heroes: Hero[] = [];
+    beers: Beer[] = [];
 
-  constructor(private heroService: HeroService) { }
+    constructor(private beerService: BeerService) { }
 
-  ngOnInit() {
-    this.getHeroes();
-  }
+    ngOnInit() {
+        this.getBeers();
+    }
 
-  getHeroes(): void {
-    this.heroService.getHeroes()
-      .subscribe(heroes => this.heroes = heroes.slice(1, 5));
-  }
+    private getBeers(): void {
+        this.beerService.getBeers()
+            .subscribe(beers => this.beers = beers.slice(1, 5));
+    }
+    public getImagePath(id: string): string {
+        const path = '/assets/images/' + id + '.jpg';
+        return path;
+    }
 }
