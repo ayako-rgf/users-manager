@@ -1,4 +1,6 @@
 import { InMemoryDbService } from 'angular-in-memory-web-api';
+import { User } from './user';
+import { Request } from './request';
 
 export class InMemoryDataService implements InMemoryDbService {
     createDb() {
@@ -14,6 +16,18 @@ export class InMemoryDataService implements InMemoryDbService {
             { id: 19, name: 'Guinness Draught', country: 'Ireland' },
             { id: 20, name: 'Skol Lager Beer', country: 'Malaysia' }
         ];
-        return { beers };
+        const users: User[] = [
+            { id: 101, name: 'Tomoko', email: 'tomoko@ayako.com', status: 'Active' },
+            { id: 102, name: 'Jumpei', email: 'jumpei@ayako.com', status: 'Inactive' },
+            { id: 103, name: 'Toshihiro', email: 'toshihiro@ayako.com', status: 'Active' },
+            { id: 104, name: 'Hana', email: 'hana@ayako.com', status: 'Active' },
+            { id: 105, name: 'Takashi', email: 'takashi@ayako.com', status: 'Active' },
+        ];
+        const requests: Request[] = [
+            { id: 1001, requesterUserId: 103, subjectUserId: 101, status: 'Pending' },
+            { id: 1002, requesterUserId: 103, subjectUserId: 102, status: 'Approved' },
+            { id: 1003, requesterUserId: 103, subjectUserId: 104, status: 'Rejected' }
+        ];
+        return { beers, users, requests };
     }
 }

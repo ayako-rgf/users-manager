@@ -3,15 +3,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material';
 
-import { BeersComponent } from './beers.component';
+import { UsersComponent } from './users.component';
 
-describe('BeersComponent', () => {
-    let component: BeersComponent;
-    let fixture: ComponentFixture<BeersComponent>;
+describe('UsersComponent', () => {
+    let component: UsersComponent;
+    let fixture: ComponentFixture<UsersComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BeersComponent],
+            declarations: [UsersComponent],
             imports: [
                 HttpClientModule,
                 RouterTestingModule,
@@ -22,7 +22,7 @@ describe('BeersComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(BeersComponent);
+        fixture = TestBed.createComponent(UsersComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

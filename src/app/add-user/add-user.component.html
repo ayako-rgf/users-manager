@@ -1,0 +1,16 @@
+<h2>Add a New User</h2>
+<div>
+    <mat-form-field>
+        <input matInput placeholder="User Name" [(ngModel)]="user.name" required="true">
+    </mat-form-field>
+</div>
+<div>
+    <mat-form-field>
+        <input matInput placeholder="Email" [(ngModel)]="user.email">
+    </mat-form-field>
+</div>
+<div>
+    <button mat-raised-button (click)="add($event)">
+        Add
+    </button>
+</div>

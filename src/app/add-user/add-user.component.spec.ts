@@ -3,16 +3,16 @@ import { MatInputModule, MatSnackBarModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-import { AddBeerComponent } from './add-beer.component';
+import { AddUserComponent } from './add-user.component';
 
-describe('AddBeerComponent', () => {
-    let component: AddBeerComponent;
-    let fixture: ComponentFixture<AddBeerComponent>;
+describe('AddUserComponent', () => {
+    let component: AddUserComponent;
+    let fixture: ComponentFixture<AddUserComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                AddBeerComponent
+                AddUserComponent
             ],
             imports: [
                 MatInputModule,
@@ -25,7 +25,7 @@ describe('AddBeerComponent', () => {
     }));
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(AddBeerComponent);
+        fixture = TestBed.createComponent(AddUserComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
-import { Beer } from './beer';
-import { MessageService } from './message.service';
+import { User } from './user';
+import { Request } from './request';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,60 +14,45 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class BeerService {
 
-    private beersUrl = 'api/beers';
+    private usersUrl = 'api/users';
+    private requestsUrl = 'api/requests';
 
-    constructor(private http: HttpClient, private messageService: MessageService) { }
+    constructor (private http: HttpClient) { }
 
-    public getBeers(): Observable<Beer[]> {
-        return this.http.get<Beer[]>(this.beersUrl).pipe(
-            tap(beers => this.log(`fetched beers`)),
-            catchError(this.handleError('getBeers', []))
+    public getUsers (): Observable<User[]> {
+        return this.http.get<User[]>(this.usersUrl).pipe(
+            tap((users: User[]) => this.log('fetched ' + users.length + ' users')),
+            catchError(this.handleError('getUsers', []))
         );
     }
-    public getBeer(id: number): Observable<Beer> {
-        const url = `${this.beersUrl}/${id}`;
-        return this.http.get<Beer>(url).pipe(
-            tap(_ => this.log(`fetched beer id=${id}`)),
-            catchError(this.handleError<Beer>(`getBeer id=${id}`))
+    public getRequests (): Observable<Request[]> {
+        return this.http.get<Request[]>(this.requestsUrl).pipe(
+            tap((requests: Request[]) => this.log('fetched ' + requests.length + ' requests')),
+            catchError(this.handleError('getRequests', []))
         );
     }
-    public searchBeers(term: string): Observable<Beer[]> {
-        if (!term.trim()) {
-            return of([]);
-        }
-        return this.http.get<Beer[]>(`${this.beersUrl}/?name=${term}`).pipe(
-            tap(_ => this.log(`found beers matching ${term}`)),
-            catchError(this.handleError<Beer[]>('serachHeroes', []))
+    public addUser (user: User): Observable<User> {
+        user.status = 'BeingCreated';
+        return this.http.post<User>(this.usersUrl, user, httpOptions).pipe(
+            tap(() => this.log('added user w/ id=' + user.id)),
+            catchError(this.handleError<User>('addUser'))
         );
     }
-    public updateBeer(beer: Beer): Observable<any> {
-        return this.http.put(this.beersUrl, beer, httpOptions).pipe(
-            tap(_ => this.log(`updated beer id=${beer.id}`)),
-            catchError(this.handleError<any>('updateBeer'))
+    public addRequest (request: Request): Observable<Request> {
+        request.status = 'Pending';
+        return this.http.post<Request>(this.requestsUrl, request, httpOptions).pipe(
+            tap(() => this.log('added request w/ id=' + request.id)),
+            catchError(this.handleError<Request>('addRequest'))
         );
     }
-    public addBeer(beer: Beer): Observable<Beer> {
-        return this.http.post<Beer>(this.beersUrl, beer, httpOptions).pipe(
-            tap(_ => this.log(`added beer w/ id=${beer.id}`)),
-            catchError(this.handleError<Beer>('addBeer'))
-        );
-    }
-    public deleteBeer(beer: Beer | number): Observable<Beer> {
-        const id = typeof beer === 'number' ? beer : beer.id;
-        const url = `${this.beersUrl}/${id}`;
-        return this.http.delete<Beer>(url, httpOptions).pipe(
-            tap(_ => this.log(`deleted beer id=${id}`)),
-            catchError(this.handleError<Beer>('deleteBeer'))
-        );
-    }
-    private handleError<T>(operation = 'operation', result?: T) {
+    private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);
             this.log(`${operation} failed: ${error.message}}`);
             return of(result as T);
         };
     }
-    private log(message: string) {
-        this.messageService.add('BeerService: ' + message);
+    private log (message: string) {
+        console.log('BeerService: ' + message);
     }
 }

@@ -6,14 +6,14 @@ import { Component } from '@angular/core';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    navLinks = [{
-        label: 'Dashboard',
-        link: '/dashboard'
+    public navLinks = [{
+        label: 'Users',
+        link: '/users'
     }, {
-        label: 'All Beers',
-        link: '/beers'
+        label: 'Requests',
+        link: '/requests'
     }, {
-        label: 'Add New',
-        link: '/add-beer'
+        label: 'Add User',
+        link: '/add-user'
     }];
 }

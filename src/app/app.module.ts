@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatTableModule,
-            MatSortModule, MatCardModule, MatTabsModule,
-            MatSnackBarModule } from '@angular/material';
+         MatSortModule, MatTabsModule, MatCheckboxModule,
+         MatSnackBarModule } from '@angular/material';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -13,10 +13,9 @@ import { InMemoryDataService } from './in-memory-data.service';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { BeerDetailComponent } from './beer-detail/beer-detail.component';
-import { BeersComponent } from './beers/beers.component';
-import { AddBeerComponent } from './add-beer/add-beer.component';
+import { RequestsComponent } from './requests/requests.component';
+import { UsersComponent } from './users/users.component';
+import { AddUserComponent } from './add-user/add-user.component';
 
 @NgModule({
     imports: [
@@ -25,9 +24,9 @@ import { AddBeerComponent } from './add-beer/add-beer.component';
         BrowserAnimationsModule,
         MatInputModule,
         MatButtonModule,
+        MatCheckboxModule,
         MatTableModule,
         MatSortModule,
-        MatCardModule,
         MatTabsModule,
         MatSnackBarModule,
         AppRoutingModule,
@@ -38,10 +37,9 @@ import { AddBeerComponent } from './add-beer/add-beer.component';
     ],
     declarations: [
         AppComponent,
-        DashboardComponent,
-        BeersComponent,
-        BeerDetailComponent,
-        AddBeerComponent
+        RequestsComponent,
+        UsersComponent,
+        AddUserComponent
     ],
     bootstrap: [AppComponent]
 })
