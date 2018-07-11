@@ -3,4 +3,5 @@ export class Request {
     requesterUserId: number;
     subjectUserId: number;
     status: string;
+    action: string;
 }

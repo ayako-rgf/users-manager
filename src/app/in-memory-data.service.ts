@@ -24,9 +24,10 @@ export class InMemoryDataService implements InMemoryDbService {
             { id: 105, name: 'Takashi', email: 'takashi@ayako.com', status: 'Active' },
         ];
         const requests: Request[] = [
-            { id: 1001, requesterUserId: 103, subjectUserId: 101, status: 'Pending' },
-            { id: 1002, requesterUserId: 103, subjectUserId: 102, status: 'Approved' },
-            { id: 1003, requesterUserId: 103, subjectUserId: 104, status: 'Rejected' }
+            { id: 1001, requesterUserId: 103, subjectUserId: 101, action: 'Deactivate', status: 'Pending' },
+            { id: 1002, requesterUserId: 103, subjectUserId: 102, action: 'Deactivate', status: 'Approved' },
+            { id: 1003, requesterUserId: 103, subjectUserId: 104, action: 'Deactivate', status: 'Rejected' },
+            { id: 1003, requesterUserId: 103, subjectUserId: 105, action: 'Create', status: 'Approved' }
         ];
         return { beers, users, requests };
     }

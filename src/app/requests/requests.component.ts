@@ -10,7 +10,7 @@ import { Request } from '../request';
 })
 export class RequestsComponent implements OnInit {
     public dataSource: any;
-    public displayedColumns: string[] = ['select', 'id', 'requester', 'subject', 'status'];
+    public displayedColumns: string[] = ['select', 'id', 'subject', 'action', 'requester', 'status'];
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
