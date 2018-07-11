@@ -12,7 +12,7 @@ import { Request } from '../request';
 })
 export class UsersComponent implements OnInit {
     public dataSource: any;
-    public displayedColumns: string[] = ['select', 'id', 'name', 'status'];
+    public displayedColumns: string[] = ['select', 'id', 'name', 'email', 'status'];
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
