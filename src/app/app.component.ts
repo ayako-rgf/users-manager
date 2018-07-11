@@ -10,10 +10,10 @@ export class AppComponent {
         label: 'Users',
         link: '/users'
     }, {
-        label: 'Requests',
-        link: '/requests'
-    }, {
         label: 'Add User',
         link: '/add-user'
+    }, {
+        label: 'Requests',
+        link: '/requests'
     }];
 }
