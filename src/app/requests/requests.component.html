@@ -1,4 +1,20 @@
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+                (change)="onMasterCheckboxChange($event)"
+                [checked]="isMasterCheckboxChecked()"
+                [indeterminate]="isMasterCheckboxIndeterminate()">
+            </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+            <mat-checkbox
+                (change)="onCheckboxChange($event, row)"
+                [checked]="isCheckboxChecked(row)"
+                (click)="onCheckboxClicked($event)">
+            </mat-checkbox>
+        </td>
+    </ng-container>
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
         <td mat-cell *matCellDef="let element">{{element.id}}</td>
@@ -18,3 +34,9 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+<button mat-raised-button (click)="approveSelected($event)">
+    Approve Selected
+</button>
+<button mat-raised-button (click)="rejectSelected($event)">
+    Reject Selected
+</button>
