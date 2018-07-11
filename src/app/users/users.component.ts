@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { BeerService } from '../beer.service';
 import { User } from '../user';
+import { Request } from '../request';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class UsersComponent implements OnInit {
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor (private beerService: BeerService) { }
+    constructor (private beerService: BeerService, public snackBar: MatSnackBar) { }
 
     ngOnInit () {
         this.getUsers();
@@ -61,5 +62,31 @@ export class UsersComponent implements OnInit {
     }
     public onCheckboxClicked ($event): void {
         $event.stopPropagation();
+    }
+    public requestDeactivation ($event): void {
+        $event.preventDefault();
+        $event.stopPropagation();
+        console.log(this.selection.selected);
+        const requests = this.buildRequests(this.selection.selected);
+        requests.forEach((request: Request) => {
+            this.beerService.addRequest(request as Request).subscribe(() => {
+                const message = 'Request sent.';
+                console.log(message);
+                this.openSnackBar(message);
+            });
+        });
+    }
+    private buildRequests (users: User[]): Request[] {
+        return users.map((user: User) => {
+            return {
+                requesterUserId: 103, //FIXME!
+                subjectUserId: user.id
+            } as Request;
+        });
+    }
+    public openSnackBar (message: string): void {
+        this.snackBar.open(message, null, {
+            duration: 2000
+        });
     }
 }
