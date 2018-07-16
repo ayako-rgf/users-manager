@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 import { RequestsComponent } from './requests/requests.component';
 import { UsersComponent } from './users/users.component';
 import { AddUserComponent } from './add-user/add-user.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
     imports: [
@@ -39,7 +40,8 @@ import { AddUserComponent } from './add-user/add-user.component';
         AppComponent,
         RequestsComponent,
         UsersComponent,
-        AddUserComponent
+        AddUserComponent,
+        LoginComponent
     ],
     bootstrap: [AppComponent]
 })
