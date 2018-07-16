@@ -121,7 +121,7 @@ class OAuthWeb extends OAuth {
             });
 
             let loginWindowURL = this.loginURL + `/services/oauth2/authorize?client_id=${this.appId}&redirect_uri=${this.oauthCallbackURL}&response_type=token&state=${this.instanceId}`;
-            window.open(loginWindowURL, "_blank", "location=no");
+            window.open(loginWindowURL, "_blank");
 
         });
 
