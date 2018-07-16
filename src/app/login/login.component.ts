@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         const appId = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
         const loginURL = 'https://test.salesforce.com';
-        const oauthCallbackURL = 'http://localhost:4200/users';
+        const oauthCallbackURL = 'http://localhost:4200/oauth';
         const oauth = OAuth.createInstance(appId, loginURL, oauthCallbackURL);
         oauth.login().then((oauthResult) => {
             console.log(oauthResult);
