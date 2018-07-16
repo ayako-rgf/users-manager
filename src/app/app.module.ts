@@ -17,6 +17,7 @@ import { RequestsComponent } from './requests/requests.component';
 import { UsersComponent } from './users/users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { LoginComponent } from './login/login.component';
+import { OauthComponent } from './oauth/oauth.component';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import { LoginComponent } from './login/login.component';
         RequestsComponent,
         UsersComponent,
         AddUserComponent,
-        LoginComponent
+        LoginComponent,
+        OauthComponent
     ],
     bootstrap: [AppComponent]
 })
