@@ -7,6 +7,7 @@ import DataService from './forcejs/data-service';
 })
 export class SforceService {
     private isSignedIn: boolean;
+    private isSignedInAsAdmin: boolean;
     private forcejsDataService: any;
 
     constructor () {
@@ -16,12 +17,21 @@ export class SforceService {
     public isLoggedIn (): boolean {
         return this.isSignedIn;
     }
+    public isCurrentUserAdmin (): boolean {
+        return this.isSignedInAsAdmin;
+    }
     public login (): void {
         const appId = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
         const loginURL = 'https://test.salesforce.com';
         const oauthCallbackURL = 'http://localhost:4200/oauth';
         const oauth = OAuth.createInstance(appId, loginURL, oauthCallbackURL);
         oauth.login();
+    }
+    private getProfileOfUser (userId: string): Promise<string> {
+        const query = 'SELECT Profile.Name FROM User WHERE Id = \'' + userId + '\'';
+        return this.query(query).then((result: any) => {
+            return result.records[0].Profile.Name;
+        });
     }
     public createDataServiceInstance (oauthResultString: string): void {
         this.isSignedIn = true;
@@ -33,6 +43,9 @@ export class SforceService {
             proxyURL: 'https://ayako-cors-proxy.herokuapp.com/'
         };
         this.forcejsDataService = DataService.createInstance(settings, options);
+        this.getProfileOfUser(settings.userId).then((profile: string) => {
+            this.isSignedInAsAdmin = (profile === 'System Administrator');
+        });
     }
     public query (query: string): Promise<any> {
         return this.forcejsDataService.query(query);
