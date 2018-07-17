@@ -25,12 +25,10 @@ export class SforceService {
             loginURL: 'https://test.salesforce.com',
             proxyURL: 'https://ayako-cors-proxy.herokuapp.com/'
         };
-        const service = DataService.createInstance(settings, options);
-
-        service.query('select id, Name from contact LIMIT 5')
-            .then(response => {
-                console.log(response);
-            });
+        this.forcejsDataService = DataService.createInstance(settings, options);
+    }
+    public query (query: string): Promise<any> {
+        return this.forcejsDataService.query(query);
     }
     private getQueryStringAsObject (fragment: string): any {
         const obj = {};
