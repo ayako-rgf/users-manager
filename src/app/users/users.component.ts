@@ -4,7 +4,7 @@ import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { BeerService } from '../beer.service';
 import { User } from '../user';
 import { Request } from '../request';
-
+import { SforceService } from '../sforce.service';
 
 @Component({
     templateUrl: './users.component.html',
@@ -16,13 +16,17 @@ export class UsersComponent implements OnInit {
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor (private beerService: BeerService, public snackBar: MatSnackBar) { }
+    constructor (private beerService: BeerService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getUsers();
         this.selection = new SelectionModel<User>(true, []);
     }
     public getUsers (): void {
+        this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User LIMIT 5')
+            .then((result: any) => {
+                console.log(result.records);
+            });
         this.beerService.getUsers()
             .subscribe((users: User[]) => {
                 this.dataSource = new MatTableDataSource(users);

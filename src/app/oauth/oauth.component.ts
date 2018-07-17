@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SforceService } from '../sforce.service';
 
 @Component({
@@ -9,13 +9,10 @@ import { SforceService } from '../sforce.service';
 })
 export class OauthComponent implements OnInit {
 
-    constructor (private route: ActivatedRoute, private sforceService: SforceService) { }
+    constructor (private activatedRoute: ActivatedRoute, private router: Router, private sforceService: SforceService) { }
 
     ngOnInit () {
-        this.sforceService.createDataServiceInstance(this.route.snapshot.fragment);
-        this.sforceService.query('select id, Name from contact LIMIT 5')
-            .then(response => {
-                console.log(response);
-            });
+        this.sforceService.createDataServiceInstance(this.activatedRoute.snapshot.fragment);
+        this.router.navigateByUrl('/users');
     }
 }
