@@ -6,10 +6,16 @@ import DataService from './forcejs/data-service';
     providedIn: 'root'
 })
 export class SforceService {
+    private isSignedIn: boolean;
     private forcejsDataService: any;
 
-    constructor () { }
+    constructor () {
+        this.isSignedIn = false;
+    }
 
+    public isLoggedIn (): boolean {
+        return this.isSignedIn;
+    }
     public login (): void {
         const appId = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
         const loginURL = 'https://test.salesforce.com';
@@ -18,6 +24,7 @@ export class SforceService {
         oauth.login();
     }
     public createDataServiceInstance (oauthResultString: string): void {
+        this.isSignedIn = true;
         const oauthResultObject = this.getQueryStringAsObject(oauthResultString);
         const settings = this.getSettingsObjectToCreateDataServiceInstance(oauthResultObject);
         const options = {

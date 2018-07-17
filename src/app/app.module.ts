@@ -16,7 +16,6 @@ import { AppComponent } from './app.component';
 import { RequestsComponent } from './requests/requests.component';
 import { UsersComponent } from './users/users.component';
 import { AddUserComponent } from './add-user/add-user.component';
-import { LoginComponent } from './login/login.component';
 import { OauthComponent } from './oauth/oauth.component';
 
 @NgModule({
@@ -42,7 +41,6 @@ import { OauthComponent } from './oauth/oauth.component';
         RequestsComponent,
         UsersComponent,
         AddUserComponent,
-        LoginComponent,
         OauthComponent
     ],
     bootstrap: [AppComponent]
