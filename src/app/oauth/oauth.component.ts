@@ -20,7 +20,7 @@ export class OauthComponent implements OnInit {
         const options = {
             apiVersion: 'v36.0',
             loginURL: 'https://test.salesforce.com',
-            proxyURL: 'https://dev-cors-proxy.herokuapp.com/'
+            proxyURL: 'https://ayako-cors-proxy.herokuapp.com/'
         };
         const service = DataService.createInstance(settings, options);
 
