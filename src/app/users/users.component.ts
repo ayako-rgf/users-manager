@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit {
         this.selection = new SelectionModel<User>(true, []);
     }
     public getUsers (): void {
-        this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User LIMIT 5')
+        this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC LIMIT 5')
             .then((result: any) => {
                 this.dataSource = new MatTableDataSource(result.records);
                 this.dataSource.sort = this.sort;
