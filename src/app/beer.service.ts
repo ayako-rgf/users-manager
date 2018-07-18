@@ -31,6 +31,12 @@ export class BeerService {
             catchError(this.handleError<Request>('addRequest'))
         );
     }
+    public updateRequest (request: Request): Observable<any> {
+        return this.http.put<Request>(this.requestsUrl, request, httpOptions).pipe(
+            tap(() => this.log('updated request id=' + request.id)),
+            catchError(this.handleError<Request>('updateRequest'))
+        );
+    }
     private handleError<T> (operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(error);

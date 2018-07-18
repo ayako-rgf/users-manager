@@ -3,6 +3,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { BeerService } from '../beer.service';
 import { Request } from '../request';
+import { SforceService } from '../sforce.service';
 
 @Component({
     templateUrl: './requests.component.html',
@@ -14,7 +15,7 @@ export class RequestsComponent implements OnInit {
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor (private beerService: BeerService) { }
+    constructor (private beerService: BeerService, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getRequests();
@@ -72,6 +73,25 @@ export class RequestsComponent implements OnInit {
         $event.preventDefault();
         $event.stopPropagation();
         console.log(this.selection.selected);
+        this.selection.selected.forEach((request: Request) => {
+            if (request.action === 'Create') {
+                this.processUserCreationRequest(request);
+            } else if (request.action === 'Deactivate') {
+                this.processUserDeactivationRequest(request);
+            }
+        });
+    }
+    private processUserCreationRequest (request: Request): void {
+        this.sforceService.createUser(request.newUser).then(() => {
+            request.status = 'Approved';
+            this.beerService.updateRequest(request);
+        });
+    }
+    private processUserDeactivationRequest (request: Request): void {
+        this.sforceService.deactivateUser(request.subjectUserId).then(() => {
+            request.status = 'Approved';
+            this.beerService.updateRequest(request);
+        });
     }
     public rejectSelected ($event): void {
         $event.preventDefault();

@@ -73,4 +73,16 @@ export class SforceService {
             userId: oauthResult.id.split('/').pop()
         };
     }
+    public createUser (newUser: any): Promise<any> {
+        //NOTE: This does not work because it lack a lot of required field information
+        //return this.forcejsDataService.create('User', newUser);
+        return Promise.resolve();
+    }
+    public deactivateUser (userId: string): Promise<any> {
+        const user = {
+            Id: userId,
+            IsActive: false
+        };
+        return this.forcejsDataService.update('User', user);
+    }
 }

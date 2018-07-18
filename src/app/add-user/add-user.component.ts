@@ -25,7 +25,6 @@ export class AddUserComponent implements OnInit {
         const request = {
             requesterUserId: currentUserId,
             subjectUserId: null,
-            status: 'Pending',
             action: 'Create',
             newUser: {
                 Name: this.user.Name,

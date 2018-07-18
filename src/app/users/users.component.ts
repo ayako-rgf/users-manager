@@ -82,7 +82,6 @@ export class UsersComponent implements OnInit {
             return {
                 requesterUserId: currentUserId,
                 subjectUserId: user.Id,
-                status: 'Pending',
                 action: action
             } as Request;
         });
