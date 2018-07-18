@@ -8,6 +8,7 @@ import DataService from './forcejs/data-service';
 export class SforceService {
     private isSignedIn: boolean;
     private isSignedInAsAdmin: boolean;
+    private currentUserId: string;
     private forcejsDataService: any;
 
     constructor () {
@@ -19,6 +20,9 @@ export class SforceService {
     }
     public isCurrentUserAdmin (): boolean {
         return this.isSignedInAsAdmin;
+    }
+    public getCurrentUserId (): string {
+        return this.currentUserId;
     }
     public login (): void {
         const appId = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
@@ -43,7 +47,8 @@ export class SforceService {
             proxyURL: 'https://ayako-cors-proxy.herokuapp.com/'
         };
         this.forcejsDataService = DataService.createInstance(settings, options);
-        this.getProfileOfUser(settings.userId).then((profile: string) => {
+        this.currentUserId = settings.userId;
+        this.getProfileOfUser(this.currentUserId).then((profile: string) => {
             this.isSignedInAsAdmin = (profile === 'System Administrator');
         });
     }

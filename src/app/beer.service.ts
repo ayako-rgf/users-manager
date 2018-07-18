@@ -14,28 +14,14 @@ const httpOptions = {
 @Injectable({ providedIn: 'root' })
 export class BeerService {
 
-    private usersUrl = 'api/users';
     private requestsUrl = 'api/requests';
 
     constructor (private http: HttpClient) { }
 
-    public getUsers (): Observable<User[]> {
-        return this.http.get<User[]>(this.usersUrl).pipe(
-            tap((users: User[]) => this.log('fetched ' + users.length + ' users')),
-            catchError(this.handleError('getUsers', []))
-        );
-    }
     public getRequests (): Observable<Request[]> {
         return this.http.get<Request[]>(this.requestsUrl).pipe(
             tap((requests: Request[]) => this.log('fetched ' + requests.length + ' requests')),
             catchError(this.handleError('getRequests', []))
-        );
-    }
-    public addUser (user: User): Observable<User> {
-        user.status = 'BeingCreated';
-        return this.http.post<User>(this.usersUrl, user, httpOptions).pipe(
-            tap(() => this.log('added user w/ id=' + user.id)),
-            catchError(this.handleError<User>('addUser'))
         );
     }
     public addRequest (request: Request): Observable<Request> {

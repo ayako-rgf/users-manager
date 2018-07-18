@@ -12,7 +12,7 @@ import { SforceService } from '../sforce.service';
 })
 export class UsersComponent implements OnInit {
     public dataSource: any;
-    public displayedColumns: string[] = ['select', 'id', 'name', 'email', 'status'];
+    public displayedColumns: string[] = ['select', 'id', 'name', 'email', 'isActive'];
     public selection: any;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -25,11 +25,7 @@ export class UsersComponent implements OnInit {
     public getUsers (): void {
         this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User LIMIT 5')
             .then((result: any) => {
-                console.log(result.records);
-            });
-        this.beerService.getUsers()
-            .subscribe((users: User[]) => {
-                this.dataSource = new MatTableDataSource(users);
+                this.dataSource = new MatTableDataSource(result.records);
                 this.dataSource.sort = this.sort;
             });
     }
@@ -71,7 +67,7 @@ export class UsersComponent implements OnInit {
         $event.preventDefault();
         $event.stopPropagation();
         console.log(this.selection.selected);
-        const requests = this.buildRequests(this.selection.selected);
+        const requests = this.buildRequests(this.selection.selected, 'Deactivate');
         requests.forEach((request: Request) => {
             this.beerService.addRequest(request as Request).subscribe(() => {
                 const message = 'Request sent.';
@@ -80,11 +76,14 @@ export class UsersComponent implements OnInit {
             });
         });
     }
-    private buildRequests (users: User[]): Request[] {
+    private buildRequests (users: User[], action: string): Request[] {
+        const currentUserId = this.sforceService.getCurrentUserId();
         return users.map((user: User) => {
             return {
-                requesterUserId: 103, //FIXME!
-                subjectUserId: user.id
+                requesterUserId: currentUserId,
+                subjectUserId: user.Id,
+                status: 'Pending',
+                action: action
             } as Request;
         });
     }

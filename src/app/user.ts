@@ -1,6 +1,6 @@
 export class User {
-    id: number;
-    name: string;
-    email: string;
-    status: string;
+    Id: string;
+    Name: string;
+    Email: string;
+    IsActive: boolean;
 }

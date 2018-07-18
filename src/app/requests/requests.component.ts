@@ -27,6 +27,13 @@ export class RequestsComponent implements OnInit {
                 this.dataSource.sort = this.sort;
             });
     }
+    public getSubjectUserText (request: Request): string {
+        if (request.subjectUserId) {
+            return request.subjectUserId;
+        } else {
+            return request.newUser.Name + ' (' + request.newUser.Email + ')';
+        }
+    }
     public isAllSelected (): boolean {
         const numSelected = this.selection.selected.length;
         const numRows = this.dataSource.data.length;
