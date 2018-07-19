@@ -1,79 +1,49 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatSort, MatTableDataSource } from '@angular/material';
 import { BeerService } from '../beer.service';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
+import { DatatableComponent } from '../datatable/datatable.component';
 
 @Component({
     templateUrl: './requests.component.html',
     styleUrls: ['./requests.component.css']
 })
 export class RequestsComponent implements OnInit {
-    public dataSource: any;
-    public displayedColumns: string[] = ['select', 'id', 'subject', 'action', 'requester', 'status'];
-    public selection: any;
-    @ViewChild(MatSort) sort: MatSort;
+    public requests: Request[];
+    public columnDefinitions: any[];
+    @ViewChild(DatatableComponent) selection: DatatableComponent<Request>;
 
     constructor (private beerService: BeerService, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getRequests();
-        this.selection = new SelectionModel<Request>(true, []);
+        this.columnDefinitions = [{
+            headerLabel: 'ID',
+            fieldName: 'id',
+        }, {
+            headerLabel: 'Subject User Id',
+            fieldName: 'subjectUserId',
+        }, {
+            headerLabel: 'Action',
+            fieldName: 'action',
+        }, {
+            headerLabel: 'Requester',
+            fieldName: 'requesterUserId',
+        }, {
+            headerLabel: 'Status',
+            fieldName: 'status',
+        }];
     }
     public getRequests (): void {
         this.beerService.getRequests()
-            .subscribe((users: Request[]) => {
-                this.dataSource = new MatTableDataSource(users);
-                this.dataSource.sort = this.sort;
+            .subscribe((requests: Request[]) => {
+                this.requests = requests;
             });
-    }
-    public getSubjectUserText (request: Request): string {
-        if (request.subjectUserId) {
-            return request.subjectUserId;
-        } else {
-            return request.newUser.Name + ' (' + request.newUser.Email + ')';
-        }
-    }
-    public isAllSelected (): boolean {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
-    public masterToggle (): void {
-        if (this.isAllSelected()) {
-            this.selection.clear();
-        } else {
-            this.dataSource.data.forEach((row: Request) => this.selection.select(row));
-        }
-    }
-    public onMasterCheckboxChange ($event): void {
-        if ($event) {
-            this.masterToggle();
-        }
-    }
-    public isMasterCheckboxChecked (): boolean {
-        return this.selection.hasValue() && this.isAllSelected();
-    }
-    public isMasterCheckboxIndeterminate (): boolean {
-        return this.selection.hasValue() && !this.isAllSelected();
-    }
-    public onCheckboxChange ($event, row): void {
-        if ($event) {
-            this.selection.toggle(row);
-        }
-    }
-    public isCheckboxChecked (row): boolean {
-        return this.selection.isSelected(row);
-    }
-    public onCheckboxClicked ($event): void {
-        $event.stopPropagation();
     }
     public approveSelected ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(this.selection.selected);
-        this.selection.selected.forEach((request: Request) => {
+        this.selection.getSelected().forEach((request: Request) => {
             if (request.action === 'Create') {
                 this.processUserCreationRequest(request);
             } else if (request.action === 'Deactivate') {
@@ -96,6 +66,6 @@ export class RequestsComponent implements OnInit {
     public rejectSelected ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(this.selection.selected);
+        console.log(this.selection.getSelected());
     }
 }

@@ -12,8 +12,9 @@ import { SforceService } from '../sforce.service';
 })
 export class UsersComponent implements OnInit {
     public dataSource: any;
-    public displayedColumns: string[] = ['select', 'id', 'name', 'email', 'isActive'];
+    public displayedColumns: string[];
     public selection: any;
+    public columnDefinitions: any[];
     @ViewChild(MatSort) sort: MatSort;
 
     constructor (private beerService: BeerService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
@@ -21,6 +22,20 @@ export class UsersComponent implements OnInit {
     ngOnInit () {
         this.getUsers();
         this.selection = new SelectionModel<User>(true, []);
+        this.columnDefinitions = [{
+            headerLabel: 'Id',
+            fieldName: 'Id',
+        }, {
+            headerLabel: 'Name',
+            fieldName: 'Name',
+        }, {
+            headerLabel: 'Email',
+            fieldName: 'Email',
+        }, {
+            headerLabel: 'IsActive',
+            fieldName: 'IsActive',
+        }];
+        this.displayedColumns = ['select', ...this.columnDefinitions.map((def) => def.fieldName)];
     }
     public getUsers (): void {
         this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC LIMIT 5')
