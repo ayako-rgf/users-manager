@@ -44,7 +44,7 @@ export class SforceService {
         const options = {
             apiVersion: 'v36.0',
             loginURL: 'https://test.salesforce.com',
-            proxyURL: 'https://ayako-cors-proxy.herokuapp.com/'
+            useProxy: false
         };
         this.forcejsDataService = DataService.createInstance(settings, options);
         this.currentUserId = settings.userId;
