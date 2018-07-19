@@ -20,7 +20,6 @@ const routes: Routes = [{
         component: AddUserComponent
     }, {
         path: 'requests',
-        canActivate: [AuthGuardAdmin],
         component: RequestsComponent
     }, {
         path: 'users',
