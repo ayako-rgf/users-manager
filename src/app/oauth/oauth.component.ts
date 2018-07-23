@@ -3,9 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SforceService } from '../sforce.service';
 
 @Component({
-    selector: 'app-oauth',
-    templateUrl: './oauth.component.html',
-    styleUrls: ['./oauth.component.css']
+    template: ''
 })
 export class OauthComponent implements OnInit {
 
