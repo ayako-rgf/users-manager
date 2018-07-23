@@ -34,11 +34,19 @@ export class RequestsComponent implements OnInit {
             fieldName: 'status',
         }];
     }
-    public getRequests (): void {
+    private getRequests (): void {
         this.requestService.getRequests()
             .subscribe((requests: Request[]) => {
-                this.requests = requests;
+                if (this.isCurrentUserAdmin()) {
+                    this.requests = requests;
+                } else {
+                    const currentUserId = this.sforceService.getCurrentUserId();
+                    this.requests = requests.filter((request: Request) => request.requesterUserId === currentUserId);
+                }
             });
+    }
+    public isCurrentUserAdmin (): boolean {
+        return this.sforceService.isCurrentUserAdmin();
     }
     public approveSelected ($event): void {
         $event.preventDefault();

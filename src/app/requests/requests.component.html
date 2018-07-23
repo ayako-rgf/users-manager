@@ -1,7 +1,9 @@
 <app-datatable [data]="requests" [columnDefinitions]="columnDefinitions"></app-datatable>
-<button mat-raised-button (click)="approveSelected($event)">
-    Approve Selected
-</button>
-<button mat-raised-button (click)="rejectSelected($event)">
-    Reject Selected
-</button>
+<span ng-if="::isCurrentUserAdmin()">
+    <button mat-raised-button (click)="approveSelected($event)">
+        Approve Selected
+    </button>
+    <button mat-raised-button (click)="rejectSelected($event)">
+        Reject Selected
+    </button>
+</span>
