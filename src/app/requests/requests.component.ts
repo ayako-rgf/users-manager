@@ -52,10 +52,8 @@ export class RequestsComponent implements OnInit {
         });
     }
     private processUserCreationRequest (request: Request): void {
-        this.sforceService.createUser(request.newUser).then(() => {
-            request.status = 'Approved';
-            this.requestService.updateRequest(request);
-        });
+        request.status = 'Approved';
+        this.requestService.updateRequest(request);
     }
     private processUserDeactivationRequest (request: Request): void {
         this.sforceService.deactivateUser(request.subjectUserId).then(() => {

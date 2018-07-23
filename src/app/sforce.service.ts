@@ -10,6 +10,8 @@ export class SforceService {
     private isSignedInAsAdmin: boolean;
     private currentUserId: string;
     private forcejsDataService: any;
+    private readonly appId: string = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
+    private readonly loginURL: string = 'https://test.salesforce.com';
 
     constructor () {
         this.isSignedIn = false;
@@ -25,25 +27,16 @@ export class SforceService {
         return this.currentUserId;
     }
     public login (): void {
-        const appId = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
-        const loginURL = 'https://test.salesforce.com';
         const oauthCallbackURL = 'http://localhost:4200/oauth';
-        const oauth = OAuth.createInstance(appId, loginURL, oauthCallbackURL);
+        const oauth = OAuth.createInstance(this.appId, this.loginURL, oauthCallbackURL);
         oauth.login();
-    }
-    private getProfileOfUser (userId: string): Promise<string> {
-        const query = 'SELECT Profile.Name FROM User WHERE Id = \'' + userId + '\'';
-        return this.query(query).then((result: any) => {
-            return result.records[0].Profile.Name;
-        });
     }
     public createDataServiceInstance (oauthResultString: string): void {
         this.isSignedIn = true;
         const oauthResultObject = this.getQueryStringAsObject(oauthResultString);
         const settings = this.getSettingsObjectToCreateDataServiceInstance(oauthResultObject);
         const options = {
-            apiVersion: 'v36.0',
-            loginURL: 'https://test.salesforce.com',
+            loginURL: this.loginURL,
             useProxy: false
         };
         this.forcejsDataService = DataService.createInstance(settings, options);
@@ -51,9 +44,6 @@ export class SforceService {
         this.getProfileOfUser(this.currentUserId).then((profile: string) => {
             this.isSignedInAsAdmin = (profile === 'System Administrator');
         });
-    }
-    public query (query: string): Promise<any> {
-        return this.forcejsDataService.query(query);
     }
     private getQueryStringAsObject (fragment: string): any {
         const obj = {};
@@ -66,17 +56,21 @@ export class SforceService {
     }
     private getSettingsObjectToCreateDataServiceInstance (oauthResult: any): any {
         return {
-            appId: '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8',
+            appId: this.appId,
             accessToken: oauthResult.access_token,
             instanceURL: oauthResult.instance_url,
             refreshToken: oauthResult.refresh_token,
             userId: oauthResult.id.split('/').pop()
         };
     }
-    public createUser (newUser: any): Promise<any> {
-        //NOTE: This does not work because it lack a lot of required field information
-        //return this.forcejsDataService.create('User', newUser);
-        return Promise.resolve();
+    private getProfileOfUser (userId: string): Promise<string> {
+        const query = 'SELECT Profile.Name FROM User WHERE Id = \'' + userId + '\'';
+        return this.query(query).then((result: any) => {
+            return result.records[0].Profile.Name;
+        });
+    }
+    public query (query: string): Promise<any> {
+        return this.forcejsDataService.query(query);
     }
     public deactivateUser (userId: string): Promise<any> {
         const user = {
