@@ -1,27 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatSort, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { BeerService } from '../beer.service';
 import { User } from '../user';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
+import { DatatableComponent } from '../datatable/datatable.component';
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-    public dataSource: any;
-    public displayedColumns: string[];
-    public selection: any;
+    public users: User[];
     public columnDefinitions: any[];
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(DatatableComponent) selection: DatatableComponent<User>;
 
     constructor (private beerService: BeerService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getUsers();
-        this.selection = new SelectionModel<User>(true, []);
         this.columnDefinitions = [{
             headerLabel: 'Id',
             fieldName: 'Id',
@@ -35,54 +32,17 @@ export class UsersComponent implements OnInit {
             headerLabel: 'IsActive',
             fieldName: 'IsActive',
         }];
-        this.displayedColumns = ['select', ...this.columnDefinitions.map((def) => def.fieldName)];
     }
     public getUsers (): void {
         this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC LIMIT 5')
             .then((result: any) => {
-                this.dataSource = new MatTableDataSource(result.records);
-                this.dataSource.sort = this.sort;
+                this.users = result.records;
             });
-    }
-    public isAllSelected (): boolean {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
-    public masterToggle (): void {
-        if (this.isAllSelected()) {
-            this.selection.clear();
-        } else {
-            this.dataSource.data.forEach((row: User) => this.selection.select(row));
-        }
-    }
-    public onMasterCheckboxChange ($event): void {
-        if ($event) {
-            this.masterToggle();
-        }
-    }
-    public isMasterCheckboxChecked (): boolean {
-        return this.selection.hasValue() && this.isAllSelected();
-    }
-    public isMasterCheckboxIndeterminate (): boolean {
-        return this.selection.hasValue() && !this.isAllSelected();
-    }
-    public onCheckboxChange ($event, row): void {
-        if ($event) {
-            this.selection.toggle(row);
-        }
-    }
-    public isCheckboxChecked (row): boolean {
-        return this.selection.isSelected(row);
-    }
-    public onCheckboxClicked ($event): void {
-        $event.stopPropagation();
     }
     public requestDeactivation ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(this.selection.selected);
-        const requests = this.buildRequests(this.selection.selected, 'Deactivate');
+        const requests = this.buildRequests(this.selection.getSelected(), 'Deactivate');
         requests.forEach((request: Request) => {
             this.beerService.addRequest(request as Request).subscribe(() => {
                 const message = 'Request sent.';
