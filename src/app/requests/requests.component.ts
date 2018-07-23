@@ -66,6 +66,11 @@ export class RequestsComponent implements OnInit {
     public rejectSelected ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        console.log(this.selection.getSelected());
+        this.selection.getSelected().forEach((request: Request) => {
+            if (request.status === 'Pending') {
+                request.status = 'Rejected';
+                this.beerService.updateRequest(request);
+            }
+        });
     }
 }
