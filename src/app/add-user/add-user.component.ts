@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { User } from '../user';
 import { Request } from '../request';
-import { BeerService } from '../beer.service';
+import { RequestService } from '../request.service';
 import { SforceService } from '../sforce.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { SforceService } from '../sforce.service';
 export class AddUserComponent implements OnInit {
     public user: User;
 
-    constructor (private beerService: BeerService, private sforceService: SforceService, public snackBar: MatSnackBar) { }
+    constructor (private requestService: RequestService, private sforceService: SforceService, public snackBar: MatSnackBar) { }
 
     ngOnInit () {
         this.user = new User();
@@ -31,7 +31,7 @@ export class AddUserComponent implements OnInit {
                 Email: this.user.Email
             }
         };
-        this.beerService.addRequest(request as Request).subscribe(() => {
+        this.requestService.addRequest(request as Request).subscribe(() => {
             const message = 'A new user "' + this.user.Name + '" requested.';
             console.log(message);
             this.openSnackBar(message);

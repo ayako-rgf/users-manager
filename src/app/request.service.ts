@@ -12,7 +12,7 @@ const httpOptions = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class BeerService {
+export class RequestService {
 
     private requestsUrl = 'api/requests';
 
@@ -45,6 +45,6 @@ export class BeerService {
         };
     }
     private log (message: string) {
-        console.log('BeerService: ' + message);
+        console.log('RequestService: ' + message);
     }
 }

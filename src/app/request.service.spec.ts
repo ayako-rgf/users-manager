@@ -2,12 +2,12 @@ import { TestBed, inject } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
 
-import { BeerService } from './beer.service';
+import { RequestService } from './request.service';
 
-describe('BeerService', () => {
+describe('RequestService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [BeerService],
+            providers: [RequestService],
             imports: [
                 HttpClientModule,
                 RouterTestingModule
@@ -15,7 +15,7 @@ describe('BeerService', () => {
         });
     });
 
-    it('should be created', inject([BeerService], (service: BeerService) => {
+    it('should be created', inject([RequestService], (service: RequestService) => {
         expect(service).toBeTruthy();
     }));
 });

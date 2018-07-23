@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BeerService } from '../beer.service';
+import { RequestService } from '../request.service';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
 import { DatatableComponent } from '../datatable/datatable.component';
@@ -13,7 +13,7 @@ export class RequestsComponent implements OnInit {
     public columnDefinitions: any[];
     @ViewChild(DatatableComponent) selection: DatatableComponent<Request>;
 
-    constructor (private beerService: BeerService, private sforceService: SforceService) { }
+    constructor (private requestService: RequestService, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getRequests();
@@ -35,7 +35,7 @@ export class RequestsComponent implements OnInit {
         }];
     }
     public getRequests (): void {
-        this.beerService.getRequests()
+        this.requestService.getRequests()
             .subscribe((requests: Request[]) => {
                 this.requests = requests;
             });
@@ -54,13 +54,13 @@ export class RequestsComponent implements OnInit {
     private processUserCreationRequest (request: Request): void {
         this.sforceService.createUser(request.newUser).then(() => {
             request.status = 'Approved';
-            this.beerService.updateRequest(request);
+            this.requestService.updateRequest(request);
         });
     }
     private processUserDeactivationRequest (request: Request): void {
         this.sforceService.deactivateUser(request.subjectUserId).then(() => {
             request.status = 'Approved';
-            this.beerService.updateRequest(request);
+            this.requestService.updateRequest(request);
         });
     }
     public rejectSelected ($event): void {
@@ -69,7 +69,7 @@ export class RequestsComponent implements OnInit {
         this.selection.getSelected().forEach((request: Request) => {
             if (request.status === 'Pending') {
                 request.status = 'Rejected';
-                this.beerService.updateRequest(request);
+                this.requestService.updateRequest(request);
             }
         });
     }

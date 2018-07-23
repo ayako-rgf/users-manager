@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { BeerService } from '../beer.service';
+import { RequestService } from '../request.service';
 import { User } from '../user';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
@@ -15,7 +15,7 @@ export class UsersComponent implements OnInit {
     public columnDefinitions: any[];
     @ViewChild(DatatableComponent) selection: DatatableComponent<User>;
 
-    constructor (private beerService: BeerService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
+    constructor (private requestService: RequestService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getUsers();
@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
         $event.stopPropagation();
         const requests = this.buildRequests(this.selection.getSelected(), 'Deactivate');
         requests.forEach((request: Request) => {
-            this.beerService.addRequest(request as Request).subscribe(() => {
+            this.requestService.addRequest(request as Request).subscribe(() => {
                 const message = 'Request sent.';
                 console.log(message);
                 this.openSnackBar(message);
