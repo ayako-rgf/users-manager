@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import OAuth from './forcejs/oauth';
-import DataService from './forcejs/data-service';
+import OAuth from '../lib/forcejs/oauth';
+import DataService from '../lib/forcejs/data-service';
 
 @Injectable({
     providedIn: 'root'
