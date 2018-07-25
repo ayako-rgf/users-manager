@@ -5,6 +5,7 @@ import { User } from '../user';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
 import { DatatableComponent } from '../datatable/datatable.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     templateUrl: './users.component.html',
@@ -13,9 +14,9 @@ import { DatatableComponent } from '../datatable/datatable.component';
 export class UsersComponent implements OnInit {
     public users: User[];
     public columnDefinitions: any[];
-    @ViewChild(DatatableComponent) selection: DatatableComponent<User>;
+    @ViewChild(DatatableComponent) datatable: DatatableComponent<User>;
 
-    constructor (private requestService: RequestService, public snackBar: MatSnackBar, private sforceService: SforceService) { }
+    constructor (private requestService: RequestService, private snackBar: MatSnackBar, private sforceService: SforceService) { }
 
     ngOnInit () {
         this.getUsers();
@@ -42,13 +43,11 @@ export class UsersComponent implements OnInit {
     public requestDeactivation ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        const requests = this.buildRequests(this.selection.getSelected(), 'Deactivate');
-        requests.forEach((request: Request) => {
-            this.requestService.addRequest(request as Request).subscribe(() => {
-                const message = 'Request sent.';
-                console.log(message);
-                this.openSnackBar(message);
-            });
+        const requests = this.buildRequests(this.datatable.getSelected(), 'Deactivate');
+        const observables = requests.map((request: Request) => this.requestService.addRequest(request));
+        forkJoin(observables).subscribe(() => {
+            this.datatable.clearSelected();
+            this.openSnackBar('Request(s) sent.');
         });
     }
     private buildRequests (users: User[], action: string): Request[] {
@@ -61,9 +60,9 @@ export class UsersComponent implements OnInit {
             } as Request;
         });
     }
-    public openSnackBar (message: string): void {
+    private openSnackBar (message: string): void {
         this.snackBar.open(message, null, {
-            duration: 2000
+            duration: 4000
         });
     }
 }

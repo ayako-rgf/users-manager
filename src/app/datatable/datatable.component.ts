@@ -64,4 +64,7 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
     public getSelected (): any {
         return this.selection.selected;
     }
+    public clearSelected (): void {
+        this.selection.clear();
+    }
 }

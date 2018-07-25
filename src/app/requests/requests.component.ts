@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { RequestService } from '../request.service';
 import { Request } from '../request';
 import { SforceService } from '../sforce.service';
 import { DatatableComponent } from '../datatable/datatable.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     templateUrl: './requests.component.html',
@@ -11,12 +13,12 @@ import { DatatableComponent } from '../datatable/datatable.component';
 export class RequestsComponent implements OnInit {
     public requests: Request[];
     public columnDefinitions: any[];
-    @ViewChild(DatatableComponent) selection: DatatableComponent<Request>;
+    @ViewChild(DatatableComponent) datatable: DatatableComponent<Request>;
 
-    constructor (private requestService: RequestService, private sforceService: SforceService) { }
+    constructor (private requestService: RequestService, private sforceService: SforceService, private snackBar: MatSnackBar) { }
 
     ngOnInit () {
-        this.getRequests();
+        this.loadRequests();
         this.columnDefinitions = [{
             headerLabel: 'ID',
             fieldName: 'id',
@@ -34,7 +36,7 @@ export class RequestsComponent implements OnInit {
             fieldName: 'status',
         }];
     }
-    private getRequests (): void {
+    private loadRequests (): void {
         this.requestService.getRequests()
             .subscribe((requests: Request[]) => {
                 if (this.isCurrentUserAdmin()) {
@@ -51,32 +53,32 @@ export class RequestsComponent implements OnInit {
     public approveSelected ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        this.selection.getSelected().forEach((request: Request) => {
-            if (request.action === 'Create') {
-                this.processUserCreationRequest(request);
-            } else if (request.action === 'Deactivate') {
-                this.processUserDeactivationRequest(request);
-            }
-        });
-    }
-    private processUserCreationRequest (request: Request): void {
-        request.status = 'Approved';
-        this.requestService.updateRequest(request);
-    }
-    private processUserDeactivationRequest (request: Request): void {
-        this.sforceService.deactivateUser(request.subjectUserId).then(() => {
-            request.status = 'Approved';
-            this.requestService.updateRequest(request);
-        });
+        this.processSelectedRequests('Approved');
     }
     public rejectSelected ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        this.selection.getSelected().forEach((request: Request) => {
+        this.processSelectedRequests('Rejected');
+    }
+    private processSelectedRequests (newStatus: string) {
+        const updatedRequests = this.datatable.getSelected().map((request: Request) => {
             if (request.status === 'Pending') {
-                request.status = 'Rejected';
-                this.requestService.updateRequest(request);
+                return {
+                    ...request,
+                    status: newStatus
+                };
             }
+        });
+        const observables = updatedRequests.map((request: Request) => this.requestService.updateRequest(request));
+        forkJoin(observables).subscribe(() => {
+            this.datatable.clearSelected();
+            this.openSnackBar('Changed selected requests status to: ' + newStatus);
+            this.loadRequests();
+        });
+    }
+    private openSnackBar (message: string): void {
+        this.snackBar.open(message, null, {
+            duration: 4000
         });
     }
 }
