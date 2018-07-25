@@ -28,11 +28,4 @@ export class SforceService {
     public query (query: string): Promise<any> {
         return this.sforceDataService.query(query);
     }
-    public deactivateUser (userId: string): Promise<any> {
-        const user = {
-            Id: userId,
-            IsActive: false
-        };
-        return this.sforceDataService.update('User', user);
-    }
 }
