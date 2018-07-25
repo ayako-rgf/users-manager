@@ -5,12 +5,23 @@
 
 ## Requiements
 
-Make a "Connected App" on salesforce and modify settings in src/environments.
+### In salesforce
 
-## What it does/doesn't on salesforce records
+Make a "Connected App".
 
-- When system administrator approves a user deactivation request, it actually change User.IsActive to fales on salesforce
-- When system administrator approves a user creation request, it does not create user on salesforce
+### In this app
+
+Modify settings in src/environments accordingly.
+
+## What this app does/doesn't on salesforce records
+
+### Does
+
+- Retrieve users list
+
+### Does not
+
+- Any record creation nor modification
 
 ## Development server
 
