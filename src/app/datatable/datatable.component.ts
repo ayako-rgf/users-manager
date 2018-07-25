@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
     selector: 'app-datatable',
@@ -11,6 +11,7 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
     @Input() public data: T[];
     @Input() public columnDefinitions: any[];
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
     public displayedColumns: string[];
     public dataSource: any;
     public selection: any;
@@ -22,6 +23,7 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
         if (changes.data) {
             this.dataSource = new MatTableDataSource(changes.data.currentValue);
             this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
         }
         if (changes.columnDefinitions) {
             this.displayedColumns = ['select', ...changes.columnDefinitions.currentValue.map((definition) => definition.fieldName)];
