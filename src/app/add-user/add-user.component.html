@@ -1,16 +1,24 @@
 <h2>Add a New User</h2>
-<div>
-    <mat-form-field>
-        <input matInput placeholder="User Name" [(ngModel)]="user.Name" required="true">
-    </mat-form-field>
-</div>
-<div>
-    <mat-form-field>
-        <input matInput placeholder="Email" [(ngModel)]="user.Email">
-    </mat-form-field>
-</div>
-<div>
-    <button mat-raised-button (click)="add($event)">
-        Add
-    </button>
-</div>
+<form [formGroup]="userForm">
+    <div>
+        <mat-form-field>
+            <input matInput placeholder="User Name" formControlName="name">
+            <mat-error>
+                Please input user name
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <input matInput placeholder="Email" formControlName="email">
+            <mat-error>
+                Please input valid email address
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <button mat-raised-button [disabled]="userForm.invalid" (click)="add($event)">
+            Add
+        </button>
+    </div>
+</form>
