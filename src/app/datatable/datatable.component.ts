@@ -69,4 +69,7 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
     public clearSelected (): void {
         this.selection.clear();
     }
+    public applyFilter (filterValue: string): void {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
 }
