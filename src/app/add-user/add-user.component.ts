@@ -16,6 +16,9 @@ export class AddUserComponent implements OnInit {
     constructor (private requestService: RequestService, private sforceService: SforceService, public snackBar: MatSnackBar) { }
 
     ngOnInit () {
+        this.resetUser();
+    }
+    private resetUser (): void {
         this.user = new User();
     }
     public add ($event): void {
@@ -35,11 +38,12 @@ export class AddUserComponent implements OnInit {
             const message = 'A new user "' + this.user.Name + '" requested.';
             console.log(message);
             this.openSnackBar(message);
+            this.resetUser();
         });
     }
-    public openSnackBar (message: string): void {
+    private openSnackBar (message: string): void {
         this.snackBar.open(message, null, {
-            duration: 2000
+            duration: 4000
         });
     }
 }
