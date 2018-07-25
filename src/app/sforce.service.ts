@@ -1,80 +1,38 @@
 import { Injectable } from '@angular/core';
-import OAuth from '../lib/forcejs/oauth';
-import DataService from '../lib/forcejs/data-service';
-import { sforceSettings } from '../environments/environment';
+import { SforceDataService } from './sforce-data.service';
+import { SforceOauthService } from './sforce-oauth.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SforceService {
-    private isSignedIn: boolean;
-    private isSignedInAsAdmin: boolean;
-    private currentUserId: string;
-    private forcejsDataService: any;
 
-    constructor () {
-        this.isSignedIn = false;
+    constructor (private sforceDataService: SforceDataService, private sforceOauthService: SforceOauthService) {
     }
 
+    public login (): void {
+        this.sforceOauthService.login();
+    }
+    public onOAuthCallback (urlParameters: string): Promise<void> {
+        return this.sforceDataService.onOAuthCallback(urlParameters);
+    }
     public isLoggedIn (): boolean {
-        return this.isSignedIn;
+        return this.sforceDataService.isLoggedIn();
     }
     public isCurrentUserAdmin (): boolean {
-        return this.isSignedInAsAdmin;
+        return this.sforceDataService.isCurrentUserAdmin();
     }
     public getCurrentUserId (): string {
-        return this.currentUserId;
-    }
-    public login (): void {
-        const oauth = OAuth.createInstance(sforceSettings.appId, sforceSettings.loginURL, sforceSettings.oauthCallbackURL);
-        oauth.login();
-    }
-    public createDataServiceInstance (oauthResultString: string): void {
-        this.isSignedIn = true;
-        const oauthResultObject = this.getQueryStringAsObject(oauthResultString);
-        const settings = this.getSettingsObjectToCreateDataServiceInstance(oauthResultObject);
-        const options = {
-            loginURL: sforceSettings.loginURL,
-            useProxy: false
-        };
-        this.forcejsDataService = DataService.createInstance(settings, options);
-        this.currentUserId = settings.userId;
-        this.getProfileOfUser(this.currentUserId).then((profile: string) => {
-            this.isSignedInAsAdmin = (profile === 'System Administrator');
-        });
-    }
-    private getQueryStringAsObject (fragment: string): any {
-        const obj = {};
-        const params = fragment.split('&');
-        params.forEach(param => {
-            const splitter = param.split('=');
-            obj[splitter[0]] = splitter[1];
-        });
-        return obj;
-    }
-    private getSettingsObjectToCreateDataServiceInstance (oauthResult: any): any {
-        return {
-            appId: sforceSettings.appId,
-            accessToken: oauthResult.access_token,
-            instanceURL: oauthResult.instance_url,
-            refreshToken: oauthResult.refresh_token,
-            userId: oauthResult.id.split('/').pop()
-        };
-    }
-    private getProfileOfUser (userId: string): Promise<string> {
-        const query = 'SELECT Profile.Name FROM User WHERE Id = \'' + userId + '\'';
-        return this.query(query).then((result: any) => {
-            return result.records[0].Profile.Name;
-        });
+        return this.sforceDataService.getCurrentUserId();
     }
     public query (query: string): Promise<any> {
-        return this.forcejsDataService.query(query);
+        return this.sforceDataService.query(query);
     }
     public deactivateUser (userId: string): Promise<any> {
         const user = {
             Id: userId,
             IsActive: false
         };
-        return this.forcejsDataService.update('User', user);
+        return this.sforceDataService.update('User', user);
     }
 }

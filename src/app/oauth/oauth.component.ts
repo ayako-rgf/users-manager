@@ -10,7 +10,7 @@ export class OauthComponent implements OnInit {
     constructor (private activatedRoute: ActivatedRoute, private router: Router, private sforceService: SforceService) { }
 
     ngOnInit () {
-        this.sforceService.createDataServiceInstance(this.activatedRoute.snapshot.fragment);
-        this.router.navigateByUrl('/users');
+        this.sforceService.onOAuthCallback(this.activatedRoute.snapshot.fragment)
+            .then(() => this.router.navigateByUrl('/users'));
     }
 }
