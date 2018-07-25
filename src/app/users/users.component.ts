@@ -35,7 +35,7 @@ export class UsersComponent implements OnInit {
         }];
     }
     public getUsers (): void {
-        this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC LIMIT 5')
+        this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC')
             .then((result: any) => {
                 this.users = result.records;
             });
