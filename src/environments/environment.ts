@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+    production: false
+};
+export const sforceSettings = {
+    loginURL: 'https://test.salesforce.com',
+    appId: '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8',
+    oauthCallbackURL: 'http://localhost:4200/oauth'
 };
 
 /*

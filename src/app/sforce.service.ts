@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import OAuth from '../lib/forcejs/oauth';
 import DataService from '../lib/forcejs/data-service';
+import { sforceSettings } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,8 +11,6 @@ export class SforceService {
     private isSignedInAsAdmin: boolean;
     private currentUserId: string;
     private forcejsDataService: any;
-    private readonly appId: string = '3MVG9Se4BnchkASnHuvTyYh3Kq8fpsLhxvnw20rMSBDRWTixsqiAzcTGobwRZcTGN5mZoG7vHDW3MB17gVAU8';
-    private readonly loginURL: string = 'https://test.salesforce.com';
 
     constructor () {
         this.isSignedIn = false;
@@ -27,8 +26,7 @@ export class SforceService {
         return this.currentUserId;
     }
     public login (): void {
-        const oauthCallbackURL = 'http://localhost:4200/oauth';
-        const oauth = OAuth.createInstance(this.appId, this.loginURL, oauthCallbackURL);
+        const oauth = OAuth.createInstance(sforceSettings.appId, sforceSettings.loginURL, sforceSettings.oauthCallbackURL);
         oauth.login();
     }
     public createDataServiceInstance (oauthResultString: string): void {
@@ -36,7 +34,7 @@ export class SforceService {
         const oauthResultObject = this.getQueryStringAsObject(oauthResultString);
         const settings = this.getSettingsObjectToCreateDataServiceInstance(oauthResultObject);
         const options = {
-            loginURL: this.loginURL,
+            loginURL: sforceSettings.loginURL,
             useProxy: false
         };
         this.forcejsDataService = DataService.createInstance(settings, options);
@@ -56,7 +54,7 @@ export class SforceService {
     }
     private getSettingsObjectToCreateDataServiceInstance (oauthResult: any): any {
         return {
-            appId: this.appId,
+            appId: sforceSettings.appId,
             accessToken: oauthResult.access_token,
             instanceURL: oauthResult.instance_url,
             refreshToken: oauthResult.refresh_token,
