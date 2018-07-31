@@ -20,9 +20,6 @@ export class RequestsComponent implements OnInit {
     ngOnInit () {
         this.loadRequests();
         this.columnDefinitions = [{
-            headerLabel: 'ID',
-            fieldName: 'id',
-        }, {
             headerLabel: 'Subject User Id',
             fieldName: 'subjectUserId',
         }, {
@@ -34,6 +31,12 @@ export class RequestsComponent implements OnInit {
         }, {
             headerLabel: 'Status',
             fieldName: 'status',
+        }, {
+            headerLabel: 'New User Name',
+            fieldName: 'newUserName',
+        }, {
+            headerLabel: 'New User Email',
+            fieldName: 'newUserEmail',
         }];
     }
     private loadRequests (): void {

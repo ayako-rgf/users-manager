@@ -4,8 +4,6 @@ export class Request {
     subjectUserId: string;
     status: string;
     action: string;
-    newUser?: {
-        Name: string;
-        Email: string;
-    };
+    newUserName: string;
+    newUserEmail: string;
 }

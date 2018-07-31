@@ -42,10 +42,8 @@ export class AddUserComponent implements OnInit {
             requesterUserId: currentUserId,
             subjectUserId: null,
             action: 'Create',
-            newUser: {
-                Name: this.user.Name,
-                Email: this.user.Email
-            }
+            newUserName: this.user.Name,
+            newUserEmail: this.user.Email
         };
         this.requestService.addRequest(request as Request).subscribe(() => {
             const message = 'A new user "' + this.user.Name + '" requested.';
