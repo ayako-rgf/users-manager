@@ -20,14 +20,14 @@ export class RequestsComponent implements OnInit {
     ngOnInit () {
         this.loadRequests();
         this.columnDefinitions = [{
-            headerLabel: 'Subject User Id',
-            fieldName: 'subjectUserId',
+            headerLabel: 'Subject User',
+            fieldName: 'subjectUserName',
         }, {
             headerLabel: 'Action',
             fieldName: 'action',
         }, {
             headerLabel: 'Requester',
-            fieldName: 'requesterUserId',
+            fieldName: 'requesterUserName',
         }, {
             headerLabel: 'Status',
             fieldName: 'status',
@@ -43,12 +43,47 @@ export class RequestsComponent implements OnInit {
         this.requestService.getRequests()
             .subscribe((requests: Request[]) => {
                 if (this.isCurrentUserAdmin()) {
+                    this.addUserNameToRequests(requests);
                     this.requests = requests;
                 } else {
                     const currentUserId = this.sforceService.getCurrentUserId();
-                    this.requests = requests.filter((request: Request) => request.requesterUserId === currentUserId);
+                    const myRequests = requests.filter((request: Request) => request.requesterUserId === currentUserId);
+                    this.addUserNameToRequests(myRequests);
+                    this.requests = myRequests;
                 }
             });
+    }
+    private addUserNameToRequests (requests: Request[]): Promise<void> {
+        const userIds = this.getUniqueUserIdsFromRequests(requests);
+        return this.queryUsers(userIds).then((users: any[]) => {
+            this.fillUserNameInRequests(requests, users);
+        });
+    }
+    private queryUsers (userIds: string[]): Promise<any[]> {
+        const query = 'SELECT Id, Name FROM User WHERE Id IN (' + userIds.map((userId: string) => '\'' + userId + '\'').join(',') + ')';
+        return this.sforceService.query(query).then((result: any) => result.records);
+    }
+    private fillUserNameInRequests (requests: Request[], users: any[]): void {
+        const userIdNameMap = this.getUserIdNameMap(users);
+        requests.forEach((request: Request) => {
+            request['requesterUserName'] = userIdNameMap[request.requesterUserId];
+            request['subjectUserName'] = userIdNameMap[request.subjectUserId];
+        });
+    }
+    private getUserIdNameMap (users: any[]): any {
+        const idNameMap = {};
+        users.forEach((user: any) => {
+            idNameMap[user.Id] = user.Name;
+        });
+        return idNameMap;
+    }
+    private getUniqueUserIdsFromRequests (requests: Request[]): string[] {
+        const nestedUserIds = requests.map((request: Request) => [request.requesterUserId, request.subjectUserId]);
+        const userIds = this.flattenArray(nestedUserIds).filter((userId: string) => userId);
+        return Array.from(new Set(userIds));
+    }
+    private flattenArray (array: any[]): string[] {
+        return array.reduce((acc, val) => acc.concat(val), []);
     }
     public isCurrentUserAdmin (): boolean {
         return this.sforceService.isCurrentUserAdmin();
