@@ -21,9 +21,6 @@ export class UsersComponent implements OnInit {
     ngOnInit () {
         this.getUsers();
         this.columnDefinitions = [{
-            headerLabel: 'Id',
-            fieldName: 'Id',
-        }, {
             headerLabel: 'Name',
             fieldName: 'Name',
         }, {
