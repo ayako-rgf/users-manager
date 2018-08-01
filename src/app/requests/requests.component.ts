@@ -99,13 +99,23 @@ export class RequestsComponent implements OnInit {
         this.processSelectedRequests('Rejected');
     }
     private processSelectedRequests (newStatus: string) {
-        const updatedRequests = this.datatable.getSelected().map((request: Request) => {
-            if (request.status === 'Pending') {
-                return {
-                    ...request,
-                    status: newStatus
-                };
-            }
+        const selectedRequests = this.datatable.getSelected();
+        if (selectedRequests.length === 0) {
+            return;
+        }
+        const pendingRequests = selectedRequests.filter((request: Request) => request.status === 'Pending');
+        if (pendingRequests.length === 0) {
+            this.openSnackBar('You cannot approve/reject already approved/rejected requests.');
+            return;
+        }
+        this.updateRequestsStatus(pendingRequests, newStatus);
+    }
+    private updateRequestsStatus (pendingRequests: Request[], newStatus: string): void {
+        const updatedRequests = pendingRequests.map((request: Request) => {
+            return {
+                ...request,
+                status: newStatus
+            };
         });
         const observables = updatedRequests.map((request: Request) => this.requestService.updateRequest(request));
         forkJoin(observables).subscribe(() => {
