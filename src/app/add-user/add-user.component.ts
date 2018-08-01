@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { Request } from '../request';
+import { Request } from '../types';
 import { RequestService } from '../request.service';
 import { SforceService } from '../sforce.service';
 

@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { RequestService } from '../request.service';
-import { User } from '../user';
-import { Request } from '../request';
 import { SforceService } from '../sforce.service';
+import { User, Request } from '../types';
 import { DatatableComponent } from '../datatable/datatable.component';
 import { forkJoin } from 'rxjs';
 

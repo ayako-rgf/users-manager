@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Request } from './request';
-import { User } from './user';
+import { User, Request } from './types';
 import { SforceService } from './sforce.service';
 
 @Injectable({
