@@ -8,10 +8,6 @@ describe('workspace-project App', () => {
     });
     it('document title', () => {
         page.navigateTo();
-        expect(page.getDocumentTitle()).toEqual('Tour of Beers');
-    });
-    it('nav bar text', () => {
-        page.navigateTo();
-        expect(page.getNavigationBarText()).toEqual('Dashboard');
+        expect(page.getDocumentTitle()).toEqual('Manage Users');
     });
 });
