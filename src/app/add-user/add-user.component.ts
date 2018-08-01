@@ -34,20 +34,24 @@ export class AddUserComponent implements OnInit {
     public add ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        const currentUserId = this.sforceService.getCurrentUserId();
-        const request = {
-            requesterUserId: currentUserId,
-            subjectUserId: null,
-            action: 'Create',
-            newUserName: this.userForm.value.name,
-            newUserEmail: this.userForm.value.email
-        };
-        this.requestService.addRequest(request as Request).subscribe(() => {
+        const request = this.buildRequest();
+        this.requestService.addRequest(request).subscribe(() => {
             const message = 'A new user "' + request.newUserName + '" requested.';
             console.log(message);
             this.openSnackBar(message);
             this.resetForm();
         });
+    }
+    private buildRequest (): Request {
+        const currentUserId = this.sforceService.getCurrentUserId();
+        return {
+            requesterUserId: currentUserId,
+            subjectUserId: null,
+            action: 'Create',
+            status: 'Pending',
+            newUserName: this.userForm.value.name,
+            newUserEmail: this.userForm.value.email
+        };
     }
     private openSnackBar (message: string): void {
         this.snackBar.open(message, null, {
