@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
         const observables = requests.map((request: Request) => this.requestService.addRequest(request));
         forkJoin(observables).subscribe(() => {
             this.datatable.clearSelected();
-            this.openSnackBar('Request(s) sent.');
+            this.snackBar.open('Request(s) sent.');
         });
     }
     private buildRequests (users: User[], action: string): Request[] {
@@ -55,11 +55,6 @@ export class UsersComponent implements OnInit {
                 subjectUserId: user.Id,
                 action: action
             } as Request;
-        });
-    }
-    private openSnackBar (message: string): void {
-        this.snackBar.open(message, null, {
-            duration: 4000
         });
     }
 }

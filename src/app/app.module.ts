@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule, MatButtonModule, MatTableModule,
          MatSortModule, MatTabsModule, MatCheckboxModule,
-         MatSnackBarModule, MatPaginatorModule } from '@angular/material';
+         MatSnackBarModule, MatPaginatorModule, MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material';
 
 import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -46,6 +46,14 @@ import { DatatableComponent } from './datatable/datatable.component';
         AddUserComponent,
         OauthComponent,
         DatatableComponent
+    ],
+    providers: [
+        {
+            provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+            useValue: {
+                duration: 4000
+            }
+        }
     ],
     bootstrap: [AppComponent]
 })

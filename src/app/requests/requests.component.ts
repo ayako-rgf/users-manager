@@ -77,7 +77,7 @@ export class RequestsComponent implements OnInit {
         }
         const pendingRequests = selectedRequests.filter((request: Request) => request.status === 'Pending');
         if (pendingRequests.length === 0) {
-            this.openSnackBar('You cannot approve/reject already approved/rejected requests.');
+            this.snackBar.open('You cannot approve/reject already approved/rejected requests.');
             return;
         }
         this.updateRequestsStatus(pendingRequests, newStatus);
@@ -92,13 +92,8 @@ export class RequestsComponent implements OnInit {
         const observables = updatedRequests.map((request: Request) => this.requestService.updateRequest(request));
         forkJoin(observables).subscribe(() => {
             this.datatable.clearSelected();
-            this.openSnackBar('Changed selected requests status to: ' + newStatus);
+            this.snackBar.open('Changed selected requests status to: ' + newStatus);
             this.loadRequests();
-        });
-    }
-    private openSnackBar (message: string): void {
-        this.snackBar.open(message, null, {
-            duration: 4000
         });
     }
 }

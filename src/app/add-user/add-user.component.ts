@@ -38,7 +38,7 @@ export class AddUserComponent implements OnInit {
         this.requestService.addRequest(request).subscribe(() => {
             const message = 'A new user "' + request.newUserName + '" requested.';
             console.log(message);
-            this.openSnackBar(message);
+            this.snackBar.open(message);
             this.resetForm();
         });
     }
@@ -52,10 +52,5 @@ export class AddUserComponent implements OnInit {
             newUserName: this.userForm.value.name,
             newUserEmail: this.userForm.value.email
         };
-    }
-    private openSnackBar (message: string): void {
-        this.snackBar.open(message, null, {
-            duration: 4000
-        });
     }
 }
