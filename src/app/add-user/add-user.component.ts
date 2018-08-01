@@ -36,7 +36,6 @@ export class AddUserComponent implements OnInit {
         const request = this.buildRequest();
         this.requestService.addRequest(request).subscribe(() => {
             const message = 'A new user "' + request.newUserName + '" requested.';
-            console.log(message);
             this.snackBar.open(message);
             this.resetForm();
         });
