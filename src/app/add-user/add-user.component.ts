@@ -31,7 +31,7 @@ export class AddUserComponent implements OnInit {
             ])
         });
     }
-    public add ($event): void {
+    public apply ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
         const request = this.buildRequest();
