@@ -46,16 +46,19 @@ export class RequestsComponent implements OnInit {
     private loadRequests (): void {
         this.requestService.getRequests()
             .subscribe((requests: Request[]) => {
-                if (this.isCurrentUserAdmin()) {
-                    this.requestsUserNameService.addUserNameToRequests(requests);
-                    this.requests = requests;
-                } else {
-                    const currentUserId = this.sforceService.getCurrentUserId();
-                    const myRequests = requests.filter((request: Request) => request.requesterUserId === currentUserId);
-                    this.requestsUserNameService.addUserNameToRequests(myRequests);
-                    this.requests = myRequests;
-                }
+                const filteredRequests = this.filterRequestsBasedOnLoggedUser(requests);
+                this.requestsUserNameService.addUserNameToRequests(filteredRequests).then(() => {
+                    this.requests = filteredRequests;
+                });
             });
+    }
+    private filterRequestsBasedOnLoggedUser (requests: Request[]): Request[] {
+        if (this.isCurrentUserAdmin()) {
+            return requests;
+        } else {
+            const currentUserId = this.sforceService.getCurrentUserId();
+            return requests.filter((request: Request) => request.requesterUserId === currentUserId);
+        }
     }
     public isCurrentUserAdmin (): boolean {
         return this.sforceService.isCurrentUserAdmin();
