@@ -16,7 +16,8 @@ export class UsersComponent implements OnInit {
     public columnDefinitions: Column[];
     @ViewChild(DatatableComponent) datatable: DatatableComponent<User>;
 
-    constructor (private requestService: RequestService, private snackBar: MatSnackBar, private sforceService: SforceService) { }
+    constructor (private requestService: RequestService, private snackBar: MatSnackBar, private sforceService: SforceService) {
+    }
 
     ngOnInit () {
         this.getUsers();
@@ -29,31 +30,62 @@ export class UsersComponent implements OnInit {
         }, {
             headerLabel: 'IsActive',
             fieldName: 'IsActive',
+        }, {
+            headerLabel: 'Deactivation Request Pending',
+            fieldName: 'requestPending',
         }];
     }
     public getUsers (): void {
         this.sforceService.query('SELECT Id, Name, Email, IsActive FROM User ORDER BY LastModifiedDate DESC')
             .then((result: any) => {
                 this.users = result.records;
+                this.refreshRequestPendingFlags(this.users);
             });
     }
-    public requestDeactivation ($event): void {
+    private refreshRequestPendingFlags (users: User[]): void {
+        this.requestService.getRequests()
+            .subscribe((requests: Request[]) => {
+                const requestPendingUserIds = this.getDeactivationRequestPendingUserIds(requests);
+                users.forEach((user: User) => {
+                    user['requestPending'] = requestPendingUserIds.includes(user.Id);
+                });
+            });
+    }
+    private getDeactivationRequestPendingUserIds (requests: Request[]): string[] {
+        return requests
+            .filter((request: Request) => request.status === 'Pending' && request.action === 'Deactivate')
+            .map((request: Request) => request.subjectUserId);
+    }
+    public processSelectedUsers ($event): void {
         $event.preventDefault();
         $event.stopPropagation();
-        const requests = this.buildRequests(this.datatable.getSelected(), 'Deactivate');
+        const selectedUsers = this.datatable.getSelected();
+        if (selectedUsers.length === 0) {
+            return;
+        }
+        const selectedActiveUsers = selectedUsers.filter((user: User) => user.IsActive && !user['requestPending']);
+        if (selectedActiveUsers.length === 0) {
+            this.snackBar.open('Selected users are already inactive or request pending.');
+            return;
+        }
+        this.submitDeactivationRequest(selectedActiveUsers);
+    }
+    private submitDeactivationRequest (activeUsers: User[]): void {
+        const requests = this.buildDeactivationRequests(activeUsers);
         const observables = requests.map((request: Request) => this.requestService.addRequest(request));
         forkJoin(observables).subscribe(() => {
+            this.refreshRequestPendingFlags(this.users);
             this.datatable.clearSelected();
             this.snackBar.open('Request(s) sent.');
         });
     }
-    private buildRequests (users: User[], action: string): Request[] {
+    private buildDeactivationRequests (users: User[]): Request[] {
         const currentUserId = this.sforceService.getCurrentUserId();
         return users.map((user: User) => {
             return {
                 requesterUserId: currentUserId,
                 subjectUserId: user.Id,
-                action: action
+                action: 'Deactivate'
             } as Request;
         });
     }
