@@ -5,6 +5,7 @@ import { RequestsUserNameService } from '../requests-user-name.service';
 import { Request } from '../types';
 import { SforceService } from '../sforce.service';
 import { DatatableComponent } from '../datatable/datatable.component';
+import { Column } from '../datatable/datatabe-types';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -13,7 +14,7 @@ import { forkJoin } from 'rxjs';
 })
 export class RequestsComponent implements OnInit {
     public requests: Request[];
-    public columnDefinitions: any[];
+    public columnDefinitions: Column[];
     @ViewChild(DatatableComponent) datatable: DatatableComponent<Request>;
 
     constructor (

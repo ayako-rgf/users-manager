@@ -4,6 +4,7 @@ import { RequestService } from '../request.service';
 import { SforceService } from '../sforce.service';
 import { User, Request } from '../types';
 import { DatatableComponent } from '../datatable/datatable.component';
+import { Column } from '../datatable/datatabe-types';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -12,7 +13,7 @@ import { forkJoin } from 'rxjs';
 })
 export class UsersComponent implements OnInit {
     public users: User[];
-    public columnDefinitions: any[];
+    public columnDefinitions: Column[];
     @ViewChild(DatatableComponent) datatable: DatatableComponent<User>;
 
     constructor (private requestService: RequestService, private snackBar: MatSnackBar, private sforceService: SforceService) { }

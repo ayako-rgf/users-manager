@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, Input, ViewChild, SimpleChanges } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
+import { Column } from './datatabe-types';
 
 @Component({
     selector: 'app-datatable',
@@ -9,7 +10,7 @@ import { MatSort, MatTableDataSource, MatPaginator } from '@angular/material';
 })
 export class DatatableComponent<T> implements OnInit, OnChanges {
     @Input() public data: T[];
-    @Input() public columnDefinitions: any[];
+    @Input() public columnDefinitions: Column[];
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     public displayedColumns: string[];
@@ -32,7 +33,7 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
             ];
         }
     }
-    private getFieldNamesFromColumnDefinitions (columnDefinitions: any[]): string[] {
+    private getFieldNamesFromColumnDefinitions (columnDefinitions: Column[]): string[] {
         return columnDefinitions.map((definition) => definition.fieldName);
     }
     public onMasterCheckboxChange ($event): void {
