@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { User } from '../user';
 import { Request } from '../request';
 import { RequestService } from '../request.service';
 import { SforceService } from '../sforce.service';
@@ -12,7 +11,6 @@ import { SforceService } from '../sforce.service';
     styleUrls: ['./add-user.component.css']
 })
 export class AddUserComponent implements OnInit {
-    public user: User;
     public userForm: FormGroup;
 
     constructor (private requestService: RequestService, private sforceService: SforceService, public snackBar: MatSnackBar) {
@@ -22,13 +20,12 @@ export class AddUserComponent implements OnInit {
         this.resetForm();
     }
     private resetForm (): void {
-        this.user = new User();
-        this.userForm = this.createFormGroup(this.user);
+        this.userForm = this.createFormGroup();
     }
-    private createFormGroup (user: User): FormGroup {
+    private createFormGroup (): FormGroup {
         return new FormGroup({
-            name: new FormControl(user.Name, [Validators.required]),
-            email: new FormControl(user.Email, [
+            name: new FormControl('', [Validators.required]),
+            email: new FormControl('', [
                 Validators.required,
                 Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/)
             ])
@@ -42,11 +39,11 @@ export class AddUserComponent implements OnInit {
             requesterUserId: currentUserId,
             subjectUserId: null,
             action: 'Create',
-            newUserName: this.user.Name,
-            newUserEmail: this.user.Email
+            newUserName: this.userForm.value.name,
+            newUserEmail: this.userForm.value.email
         };
         this.requestService.addRequest(request as Request).subscribe(() => {
-            const message = 'A new user "' + this.user.Name + '" requested.';
+            const message = 'A new user "' + request.newUserName + '" requested.';
             console.log(message);
             this.openSnackBar(message);
             this.resetForm();
