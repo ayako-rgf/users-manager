@@ -26,8 +26,14 @@ export class DatatableComponent<T> implements OnInit, OnChanges {
             this.dataSource.paginator = this.paginator;
         }
         if (changes.columnDefinitions) {
-            this.displayedColumns = ['select', ...changes.columnDefinitions.currentValue.map((definition) => definition.fieldName)];
+            this.displayedColumns = [
+                'select',
+                ...this.getFieldNamesFromColumnDefinitions(changes.columnDefinitions.currentValue)
+            ];
         }
+    }
+    private getFieldNamesFromColumnDefinitions (columnDefinitions: any[]): string[] {
+        return columnDefinitions.map((definition) => definition.fieldName);
     }
     public onMasterCheckboxChange ($event): void {
         if ($event) {
