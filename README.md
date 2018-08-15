@@ -7,11 +7,12 @@
 
 ### In salesforce
 
-Make a "Connected App".
+- Add http://localhost:4200 to whitelist for cross-origin resource sharing (CORS)
+- Make a "Connected App".
 
 ### In this app
 
-Modify settings in src/environments accordingly.
+- Replace appId in src/environments with the one of created "Connected App"
 
 ## What this app does/doesn't on salesforce records
 
