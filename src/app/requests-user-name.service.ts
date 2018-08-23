@@ -11,10 +11,14 @@ export class RequestsUserNameService {
     }
 
     public addUserNameToRequests (requests: Request[]): Promise<void> {
-        const userIds = this.getUniqueUserIdsFromRequests(requests);
-        return this.queryUsers(userIds).then((users: any[]) => {
-            this.fillUserNameInRequests(requests, users);
-        });
+        if (requests.length) {
+            const userIds = this.getUniqueUserIdsFromRequests(requests);
+            return this.queryUsers(userIds).then((users: any[]) => {
+                this.fillUserNameInRequests(requests, users);
+            });
+        } else {
+            return Promise.resolve();
+        }
     }
     private queryUsers (userIds: string[]): Promise<any[]> {
         const query = 'SELECT Id, Name FROM User WHERE Id IN (' + userIds.map((userId: string) => '\'' + userId + '\'').join(',') + ')';
